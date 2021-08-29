@@ -18,7 +18,6 @@ use std::collections::{HashSet, HashMap};
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use tokio::sync::broadcast;
-use ws_test::onebot;
 use headers::HeaderMapExt;
 use futures::stream::SplitSink;
 use tokio::sync::mpsc;
@@ -27,7 +26,9 @@ use prost;
 use onebot::*;
 use std::convert::Infallible;
 use prost::DecodeError;
-use ws_test::onebot::frame::{Data, FrameType};
+use rs_pbbot_demo::onebot::frame::{Data, FrameType};
+use rs_pbbot_demo::onebot::*;
+use rs_pbbot_demo::onebot;
 
 // Our shared state
 struct AppState {
