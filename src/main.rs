@@ -261,11 +261,11 @@ impl Bot {
      * @param message_id 消息 ID
      * @return 结果
      */
-    pub async fn get_msg(&mut self, message_id: i32) -> Option<GetMsgReq> {
+    pub async fn get_msg(&mut self, message_id: i32) -> Option<GetMsgResp> {
         let resp = self.send_and_wait(Data::GetMsgReq(GetMsgReq {
             message_id
         })).await;
-        if let Some(Data::GetMsgReq(resp)) = resp {
+        if let Some(Data::GetMsgResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -280,13 +280,13 @@ impl Bot {
      * @param reject_add_request 拒绝此人的加群请求
      * @return 结果
      */
-    pub async fn set_group_kick(&mut self, group_id: i64, user_id: i64, reject_add_request: bool) -> Option<SetGroupKickReq> {
+    pub async fn set_group_kick(&mut self, group_id: i64, user_id: i64, reject_add_request: bool) -> Option<SetGroupKickResp> {
         let resp = self.send_and_wait(Data::SetGroupKickReq(SetGroupKickReq {
             group_id,
             user_id,
             reject_add_request
         })).await;
-        if let Some(Data::SetGroupKickReq(resp)) = resp {
+        if let Some(Data::SetGroupKickResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -301,13 +301,13 @@ impl Bot {
      * @param duration 禁言时长，单位秒，0 表示取消禁言
      * @return 结果
      */
-    pub async fn set_group_ban(&mut self, group_id: i64, user_id: i64, duration: i32) -> Option<SetGroupBanReq> {
+    pub async fn set_group_ban(&mut self, group_id: i64, user_id: i64, duration: i32) -> Option<SetGroupBanResp> {
         let resp = self.send_and_wait(Data::SetGroupBanReq(SetGroupBanReq {
             group_id,
             user_id,
             duration
         })).await;
-        if let Some(Data::SetGroupBanReq(resp)) = resp {
+        if let Some(Data::SetGroupBanResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -321,12 +321,12 @@ impl Bot {
      * @param enable   是否禁言
      * @return 结果
      */
-    pub async fn set_group_whole_ban(&mut self, group_id: i64, enable: bool) -> Option<SetGroupWholeBanReq> {
+    pub async fn set_group_whole_ban(&mut self, group_id: i64, enable: bool) -> Option<SetGroupWholeBanResp> {
         let resp = self.send_and_wait(Data::SetGroupWholeBanReq(SetGroupWholeBanReq {
             group_id,
             enable
         })).await;
-        if let Some(Data::SetGroupWholeBanReq(resp)) = resp {
+        if let Some(Data::SetGroupWholeBanResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -341,13 +341,13 @@ impl Bot {
      * @param card     群名片内容，空字符串表示删除群名片
      * @return 结果
      */
-    pub async fn set_group_card(&mut self, group_id: i64, user_id: i64, card: String) -> Option<SetGroupCardReq> {
+    pub async fn set_group_card(&mut self, group_id: i64, user_id: i64, card: String) -> Option<SetGroupCardResp> {
         let resp = self.send_and_wait(Data::SetGroupCardReq(SetGroupCardReq {
             group_id,
             user_id,
             card
         })).await;
-        if let Some(Data::SetGroupCardReq(resp)) = resp {
+        if let Some(Data::SetGroupCardResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -361,12 +361,12 @@ impl Bot {
      * @param is_dismiss 是否解散，如果登录号是群主，则仅在此项为 true 时能够解散
      * @return 结果
      */
-    pub async fn set_group_leave(&mut self, group_id: i64, is_dismiss: bool) -> Option<SetGroupLeaveReq> {
+    pub async fn set_group_leave(&mut self, group_id: i64, is_dismiss: bool) -> Option<SetGroupLeaveResp> {
         let resp = self.send_and_wait(Data::SetGroupLeaveReq(SetGroupLeaveReq {
             group_id,
             is_dismiss
         })).await;
-        if let Some(Data::SetGroupLeaveReq(resp)) = resp {
+        if let Some(Data::SetGroupLeaveResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -382,14 +382,14 @@ impl Bot {
      * @param duration      专属头衔有效期，单位秒，-1 表示永久，不过此项似乎没有效果，可能是只有某些特殊的时间长度有效，有待测试
      * @return 结果
      */
-    pub async fn set_group_special_title(&mut self, group_id: i64, user_id: i64, special_title: String, duration: i64) -> Option<SetGroupSpecialTitleReq> {
+    pub async fn set_group_special_title(&mut self, group_id: i64, user_id: i64, special_title: String, duration: i64) -> Option<SetGroupSpecialTitleResp> {
         let resp = self.send_and_wait(Data::SetGroupSpecialTitleReq(SetGroupSpecialTitleReq {
             group_id,
             user_id,
             special_title,
             duration
         })).await;
-        if let Some(Data::SetGroupSpecialTitleReq(resp)) = resp {
+        if let Some(Data::SetGroupSpecialTitleResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -404,13 +404,13 @@ impl Bot {
      * @param remark  添加后的好友备注（仅在同意时有效）
      * @return 结果
      */
-    pub async fn set_friend_add_request(&mut self, flag: String, approve: bool, remark: String) -> Option<SetFriendAddRequestReq> {
+    pub async fn set_friend_add_request(&mut self, flag: String, approve: bool, remark: String) -> Option<SetFriendAddRequestResp> {
         let resp = self.send_and_wait(Data::SetFriendAddRequestReq(SetFriendAddRequestReq {
             flag,
             approve,
             remark
         })).await;
-        if let Some(Data::SetFriendAddRequestReq(resp)) = resp {
+        if let Some(Data::SetFriendAddRequestResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -427,15 +427,15 @@ impl Bot {
      * @return 结果
      */
     // TODO
-    pub async fn set_group_add_request(&mut self, flag: String,sub_type: String, approve: bool, reason: String) -> Option<SetGroupAddRequestReq> {
+    pub async fn set_group_add_request(&mut self, flag: String,sub_type: String, approve: bool, reason: String) -> Option<SetGroupAddRequestResp> {
         let resp = self.send_and_wait(Data::SetGroupAddRequestReq(SetGroupAddRequestReq {
             flag,
             sub_type,
-            r#type,
+            r#type: "".to_string(),
             approve,
             reason
         })).await;
-        if let Some(Data::SetGroupAddRequestReq(resp)) = resp {
+        if let Some(Data::SetGroupAddRequestResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -447,9 +447,9 @@ impl Bot {
      *
      * @return 结果
      */
-    pub async fn get_login_info(&mut self) -> Option<GetLoginInfoReq> {
+    pub async fn get_login_info(&mut self) -> Option<GetLoginInfoResp> {
         let resp = self.send_and_wait(Data::GetLoginInfoReq(GetLoginInfoReq {})).await;
-        if let Some(Data::GetLoginInfoReq(resp)) = resp {
+        if let Some(Data::GetLoginInfoResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -462,12 +462,12 @@ impl Bot {
      * @param user_id   QQ号
      * @return 结果
      */
-    pub async fn get_stranger_info(&mut self, user_id: i64) -> Option<GetStrangerInfoReq> {
+    pub async fn get_stranger_info(&mut self, user_id: i64) -> Option<GetStrangerInfoResp> {
         let resp = self.send_and_wait(Data::GetStrangerInfoReq(GetStrangerInfoReq {
             user_id,
             no_cache: false
         })).await;
-        if let Some(Data::GetStrangerInfoReq(resp)) = resp {
+        if let Some(Data::GetStrangerInfoResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -479,9 +479,9 @@ impl Bot {
      *
      * @return 结果
      */
-    pub async fn get_friend_list(&mut self) -> Option<GetFriendListReq> {
-        let resp = self.send_and_wait(Data::GetFriendList(GetFriendList {})).await;
-        if let Some(Data::GetFriendList(resp)) = resp {
+    pub async fn get_friend_list(&mut self) -> Option<GetFriendListResp> {
+        let resp = self.send_and_wait(Data::GetFriendListReq(GetFriendListReq {})).await;
+        if let Some(Data::GetFriendListResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -509,12 +509,12 @@ impl Bot {
      * @param no_cache 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
      * @return 结果
      */
-    pub async fn get_group_info(&mut self, group_id: i64, no_cache: bool) -> Option<GetGroupInfoReq> {
+    pub async fn get_group_info(&mut self, group_id: i64, no_cache: bool) -> Option<GetGroupInfoResp> {
         let resp = self.send_and_wait(Data::GetGroupInfoReq(GetGroupInfoReq{
             group_id,
             no_cache
         })).await;
-        if let Some(Data::GetGroupInfoReq(resp)) = resp {
+        if let Some(Data::GetGroupInfoResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -529,13 +529,13 @@ impl Bot {
      * @param no_cache 是否不使用缓存（使用缓存可能更新不及时，但响应更快）
      * @return 结果
      */
-    pub async fn get_group_member_info(&mut self,group_id: i64, user_id: i64, no_cache: bool) -> Option<GetGroupMemberInfoReq> {
+    pub async fn get_group_member_info(&mut self,group_id: i64, user_id: i64, no_cache: bool) -> Option<GetGroupMemberInfoResp> {
         let resp = self.send_and_wait(Data::GetGroupMemberInfoReq(GetGroupMemberInfoReq {
             group_id,
             user_id,
             no_cache
         })).await;
-        if let Some(Data::GetGroupMemberInfoReq(resp)) = resp {
+        if let Some(Data::GetGroupMemberInfoResp(resp)) = resp {
             Some(resp)
         } else {
             None
@@ -551,9 +551,9 @@ impl Bot {
      * @param group_id 群号
      * @return 结果
      */
-    pub async fn get_group_member_list(&mut self, group_id: i64) -> Option<GetGroupListReq> {
+    pub async fn get_group_member_list(&mut self, group_id: i64) -> Option<GetGroupListResp> {
         let resp = self.send_and_wait(Data::GetGroupListReq(GetGroupListReq {})).await;
-        if let Some(Data::GetGroupListReq(resp)) = resp {
+        if let Some(Data::GetGroupListResp(resp)) = resp {
             Some(resp)
         } else {
             None
