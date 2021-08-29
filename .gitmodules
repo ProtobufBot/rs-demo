@@ -1,0 +1,3 @@
+[submodule "src/onebot_idl"]
+	path = src/onebot_idl
+	url = https://github.com/ProtobufBot/onebot_idl.git
