@@ -46,17 +46,10 @@ impl Bot {
     /// @param content          消息内容
     /// @return 结果
     ///
-    pub async fn send_private_message(&mut self, user_id: i64, content: String) -> Option<SendPrivateMsgResp> {
+    pub async fn send_private_message<T: Into<Vec<Message>>>(&mut self, user_id: i64, message: T) -> Option<SendPrivateMsgResp> {
         let resp = self.send_and_wait(Data::SendPrivateMsgReq(SendPrivateMsgReq {
             user_id,
-            message: vec![
-                onebot::Message {
-                    r#type: "text".to_string(),
-                    data: [
-                        ("text".to_string(), content),
-                    ].iter().cloned().collect(),
-                }
-            ],
+            message: message.into(),
             auto_escape: false,
         })).await;
         if let Some(Data::SendPrivateMsgResp(resp)) = resp {
@@ -73,17 +66,10 @@ impl Bot {
     /// @param content          消息
     /// @return 结果
     ///
-    pub async fn send_group_message(&mut self, group_id: i64, content: String) -> Option<SendGroupMsgResp> {
+    pub async fn send_group_message<T: Into<Vec<Message>>>(&mut self, group_id: i64, message: T) -> Option<SendGroupMsgResp> {
         let resp = self.send_and_wait(Data::SendGroupMsgReq(SendGroupMsgReq {
             group_id,
-            message: vec![
-                onebot::Message {
-                    r#type: "text".to_string(),
-                    data: [
-                        ("text".to_string(), content),
-                    ].iter().cloned().collect(),
-                }
-            ],
+            message: message.into(),
             auto_escape: false,
         })).await;
         if let Some(Data::SendGroupMsgResp(resp)) = resp {

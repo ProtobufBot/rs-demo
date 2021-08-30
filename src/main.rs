@@ -30,6 +30,7 @@ use rs_pbbot_demo::onebot::frame::{Data, FrameType};
 use rs_pbbot_demo::onebot::*;
 use rs_pbbot_demo::onebot;
 use rs_pbbot_demo::bot::Bot;
+use rs_pbbot_demo::msg::*;
 use tokio::sync::mpsc::Sender;
 use uuid::Uuid;
 use std::ops::Deref;
@@ -91,8 +92,8 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>, bot_id: i64) {
 
     // 接受 event 和 api resp
     let mut recv_task = tokio::spawn(async move {
-        while let Some(Ok(msg)) = ws_in.next().await {
-            match msg {
+        while let Some(Ok(ws_message)) = ws_in.next().await {
+            match ws_message {
                 Message::Binary(buf) => {
                     let frame: onebot::Frame = match prost::Message::decode(buf.as_ref()) {
                         Ok(frame) => { frame }
@@ -103,7 +104,7 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>, bot_id: i64) {
                         tokio::spawn(async move {
                             match data {
                                 Data::PrivateMessageEvent(event) => {
-                                    let resp = bot.send_private_message(event.user_id, event.raw_message).await;
+                                    let resp = bot.send_private_message(event.user_id, text("a") + face(1)).await;
                                     if let Some(resp) = resp {
                                         println!("message_id: {}", resp.message_id);
                                         tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
