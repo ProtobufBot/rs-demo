@@ -35,20 +35,11 @@ use tokio::sync::mpsc::Sender;
 use uuid::Uuid;
 use std::ops::Deref;
 
-// Our shared state
-struct AppState {
-    bots: Mutex<HashMap<i64, Mutex<Bot>>>,
-}
 
 #[tokio::main]
 async fn main() {
-    let bots = Mutex::new(HashMap::new());
-
-    let app_state = Arc::new(AppState { bots });
-
     let app = Router::new()
-        .route("/ws/cq/", get(websocket_handler))
-        .layer(AddExtensionLayer::new(app_state));
+        .route("/ws/cq/", get(websocket_handler));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8081));
 
@@ -58,17 +49,15 @@ async fn main() {
         .unwrap();
 }
 
-
 async fn websocket_handler(
     ws: WebSocketUpgrade,
     headers: HeaderMap,
-    Extension(state): Extension<Arc<AppState>>,
 ) -> impl IntoResponse {
     let bot_id = headers.get("x-self-id").map(|id| id.to_str().unwrap().parse().unwrap_or_default()).unwrap_or_default();
-    ws.on_upgrade(move |socket| websocket(socket, state, bot_id))
+    ws.on_upgrade(move |socket| websocket(socket, bot_id))
 }
 
-async fn websocket(stream: WebSocket, state: Arc<AppState>, bot_id: i64) {
+async fn websocket(stream: WebSocket, bot_id: i64) {
     if bot_id == 0 {
         stream.close();
         return;
