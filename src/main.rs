@@ -104,7 +104,9 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>, bot_id: i64) {
                         tokio::spawn(async move {
                             match data {
                                 Data::PrivateMessageEvent(event) => {
-                                    let resp = bot.send_private_message(event.user_id, text("a") + face(1)).await;
+                                    // let reply_msg = share("https://www.baidu.com/", "百度", "baidu", "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png");
+                                    let reply_msg = text("hello") + face(1);
+                                    let resp = bot.send_private_message(event.user_id, reply_msg).await;
                                     if let Some(resp) = resp {
                                         println!("message_id: {}", resp.message_id);
                                         tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
